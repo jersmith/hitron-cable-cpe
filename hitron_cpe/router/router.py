@@ -1,8 +1,12 @@
+""" Represents the commands that can be sent to the Hitron router (cable CPE device). """
+
 import sys
-import requests
 import datetime
+import requests
 
 class Router:
+  """ The state and methods needed to communicate with the device. """
+
   def __init__(self, address, username, password, logger):
     self.username = username
     self.password = password
@@ -27,31 +31,34 @@ class Router:
 
     # This doesn't throw, even failures return 200. We know we got a successful
     # login if the cookie has a userid.
-    r = requests.post(f'http://{self.address}/goform/login', post_data)
+    req = requests.post(f'http://{self.address}/goform/login', post_data)
 
-    if 'userid' not in r.cookies:
-      self.logger.log_failure(r.text)
+    if 'userid' not in req.cookies:
+      self.logger.log_failure(req.text)
       sys.exit(-1)
 
-    self.cookies = r.cookies
+    self.cookies = req.cookies
 
-    userid = str(r.cookies['userid'])
+    userid = str(req.cookies['userid'])
     userid = f'{userid[:8]}...'
     self.logger.log('CONNECTED', f'userid: {userid}')
 
   def _data_request(self, name):
     if self.cookies is None:
-      r = requests.get(f'http://{self.address}/data/{name}.asp')
+      req = requests.get(f'http://{self.address}/data/{name}.asp')
     else:
       timestamp = datetime.datetime.now(datetime.timezone.utc)
-      params = { '_': timestamp}
-      r = requests.get(f'http://{self.address}/data/{name}.asp', cookies=self.cookies, params=params)
+      params = {'_': timestamp}
+      req = requests.get(f'http://{self.address}/data/{name}.asp',
+                         cookies=self.cookies,
+                         params=params)
 
-    data = r.json()
+    data = req.json()
     return data
 
 
   def get_sysinfo(self):
+    """ Router System Info request. """
     data = self._data_request('getSysInfo')
     self.logger.log('SYSINFO', data)
 
@@ -82,6 +89,6 @@ class Router:
     print('not implemented')
 
   def toggle_wireless(self, ssid):
+    """ Toggle the wireless band for ssid on or off. """
     # POST http://192.168.0.1/goform/WirelessCollection
     print('not implemented')
-
