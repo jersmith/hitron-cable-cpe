@@ -60,7 +60,8 @@ class Router:
   def get_sysinfo(self):
     """ Router System Info request. """
     data = self._data_request('getSysInfo')
-    self.logger.log('SYSINFO', data)
+    #self.logger.log('SYSINFO', data)
+    self.logger.log('SYSINFO', data[0], filter_by=['hwVersion', 'swVersion', 'serialNumber'])
 
     return data
 
@@ -79,7 +80,8 @@ class Router:
 
     collect = list(bands.values())
 
-    self.logger.log('WIRELESS', collect)
+    #self.logger.log('WIRELESS', collect)
+    self.logger.log('WIRELESS', collect, rows=True, filter_by=['band', 'bandwidth', 'ssidName', 'enable'])
 
     return collect
 
