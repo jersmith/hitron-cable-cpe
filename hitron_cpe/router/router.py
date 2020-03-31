@@ -8,9 +8,10 @@ class Router:
     self.password = password
     self.address = address
     self.logger = logger
+    self.cookies = None
+    self.csrf = None
 
-    r = requests.get(f'http://{address}/data/system_model.asp')
-    system_data = r.json()
+    system_data = self._data_request('system_model')
 
     self.model = system_data['modelName']
     self.logger.log('PROBE', f'Hitron Cable CPE {self.model}')
@@ -38,13 +39,49 @@ class Router:
     userid = f'{userid[:8]}...'
     self.logger.log('CONNECTED', f'userid: {userid}')
 
+  def _data_request(self, name):
+    if self.cookies is None:
+      r = requests.get(f'http://{self.address}/data/{name}.asp')
+    else:
+      timestamp = datetime.datetime.now(datetime.timezone.utc)
+      params = { '_': timestamp}
+      r = requests.get(f'http://{self.address}/data/{name}.asp', cookies=self.cookies, params=params)
 
-  def get_wireless(self):
-    timestamp = datetime.datetime.now(datetime.timezone.utc)
-    params = { '_': timestamp}
-    r = requests.get(f'http://{self.address}/data/wireless_ssid.asp', cookies=self.cookies, params=params)
     data = r.json()
+    return data
+
+
+  def get_sysinfo(self):
+    data = self._data_request('getSysInfo')
+    self.logger.log('SYSINFO', data)
 
     return data
 
+  def get_wireless(self):
+    """ Get basic and ssid info from all wireless bands and combine for updates. """
+    basic = self._data_request('wireless_basic')
+    ssid = self._data_request('wireless_ssid')
+
+    bands = {}
+
+    for band in basic:
+      bands[band['band']] = band
+
+    for band in ssid:
+      bands[band['band']].update(band)
+
+    collect = list(bands.values())
+
+    self.logger.log('WIRELESS', collect)
+
+    return collect
+
+  def _get_csrf(self):
+    """ The CSRF token is only needed on updates. """
+    # GET http://192.168.0.1/data/getCsrfToken.asp
+    print('not implemented')
+
+  def toggle_wireless(self, ssid):
+    # POST http://192.168.0.1/goform/WirelessCollection
+    print('not implemented')
 

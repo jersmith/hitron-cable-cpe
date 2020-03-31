@@ -24,6 +24,7 @@ def run():
   logger = Logger(value['verbose'])
   router = Router(address, user, value['password'], logger)
 
+  sys_data = router.get_sysinfo()
   wireless_data = router.get_wireless()
-  print(wireless_data)
+
 
