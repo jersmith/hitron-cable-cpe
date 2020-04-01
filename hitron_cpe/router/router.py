@@ -15,7 +15,6 @@ class Router:
     self.cookies = None
     self.csrf = None
 
-
   def _connect(self):
     if self.cookies is not None:
       return
@@ -39,7 +38,7 @@ class Router:
 
     userid = str(req.cookies['userid'])
     userid = f'{userid[:8]}...'
-    self.logger.log('CONNECTED', f'userid: {userid}')
+    self.logger.log_info('CONNECTED', f'userid: {userid}')
 
   def _data_request(self, name):
     if self.cookies is None:
@@ -55,17 +54,17 @@ class Router:
     return data
 
   def get_sys_model(self):
+    """ System Model request; this one doesn't need authentication. """
     system_data = self._data_request('system_model')
-
     self.model = system_data['modelName']
-    self.logger.log('PROBE', f'Hitron Cable CPE {self.model}')
+    self.logger.log_info('SYSTEM_MODEL', system_data, filter_by=[])
+    return system_data
 
   def get_sysinfo(self):
     """ Router System Info request. """
     self._connect()
     data = self._data_request('getSysInfo')
-    #self.logger.log('SYSINFO', data)
-    self.logger.log('SYSINFO', data[0], filter_by=['hwVersion', 'swVersion', 'serialNumber'])
+    self.logger.log_info('SYSINFO', data[0], filter_by=[])
 
     return data
 
@@ -85,8 +84,8 @@ class Router:
 
     collect = list(bands.values())
 
-    #self.logger.log('WIRELESS', collect)
-    self.logger.log('WIRELESS', collect, rows=True, filter_by=['band', 'bandwidth', 'ssidName', 'enable'])
+    #self.logger.log_info('WIRELESS', collect)
+    self.logger.log_info('WIRELESS', collect, rows=True, filter_by=['band', 'bandwidth', 'ssidName', 'enable'])
 
     return collect
 
@@ -95,7 +94,7 @@ class Router:
     self._connect()
     if self.csrf is None:
       csrf = self._data_request('getCsrfToken')
-      self.logger.log('CSRF', csrf, filter_by=['token'])
+      self.logger.log_info('CSRF', csrf, filter_by=['token'])
       self.csrf = csrf['token']
       return self.csrf
     else:
