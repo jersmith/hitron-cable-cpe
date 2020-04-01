@@ -15,13 +15,11 @@ class Router:
     self.cookies = None
     self.csrf = None
 
-    system_data = self._data_request('system_model')
-
-    self.model = system_data['modelName']
-    self.logger.log('PROBE', f'Hitron Cable CPE {self.model}')
-    self._connect()
 
   def _connect(self):
+    if self.cookies is not None:
+      return
+
     post_data = {
       "user": self.username,
       "pwd": self.password,
@@ -56,9 +54,15 @@ class Router:
     data = req.json()
     return data
 
+  def get_sys_model(self):
+    system_data = self._data_request('system_model')
+
+    self.model = system_data['modelName']
+    self.logger.log('PROBE', f'Hitron Cable CPE {self.model}')
 
   def get_sysinfo(self):
     """ Router System Info request. """
+    self._connect()
     data = self._data_request('getSysInfo')
     #self.logger.log('SYSINFO', data)
     self.logger.log('SYSINFO', data[0], filter_by=['hwVersion', 'swVersion', 'serialNumber'])
@@ -67,6 +71,7 @@ class Router:
 
   def get_wireless(self):
     """ Get basic and ssid info from all wireless bands and combine for updates. """
+    self._connect()
     basic = self._data_request('wireless_basic')
     ssid = self._data_request('wireless_ssid')
 
@@ -87,6 +92,7 @@ class Router:
 
   def _get_csrf(self):
     """ The CSRF token is only needed on updates. """
+    self._connect()
     if self.csrf is None:
       csrf = self._data_request('getCsrfToken')
       self.logger.log('CSRF', csrf, filter_by=['token'])

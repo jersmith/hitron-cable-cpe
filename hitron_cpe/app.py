@@ -2,30 +2,29 @@
 
 import sys
 from hitron_cpe.common import commando
-from hitron_cpe.common import Logger
-from hitron_cpe.router import Router
+from hitron_cpe.router import commands
+
+def _set_defaults(value):
+  address = '192.168.0.1'
+  if 'address' not in value:
+    value['address'] = address
+
+  user = 'cusadmin'
+  if 'user' not in value:
+    value['user'] = user
+
+  return value
 
 def run():
-  """ Connect to the router and execute the commands parsed from the command line. """
-  (err, value) = commando.parse('[<address>|<user>|password] (toggle|verbose)', sys.argv[1:])
+  """ Execute the commands parsed from the command line. """
+  (err, value) = commando.parse('command [<address>|<user>|password] (toggle|verbose)', sys.argv[1:])
 
   if err:
     print(value)
     return
 
-  address = '192.168.0.1'
-  if 'address' in value:
-    address = value['address']
+  value = _set_defaults(value)
+  print(f'value: {value}')
+  commands.dispatch(value)
 
-  user = 'cusadmin'
-  if 'user' in value:
-    user = value['user']
 
-  logger = Logger(value['verbose'])
-  router = Router(address, user, value['password'], logger)
-
-# dispatch commands, using stored session state if available
-
-  router.get_sysinfo()
-  router.get_wireless()
-  router.toggle_wireless('berkeley')
