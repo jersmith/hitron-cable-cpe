@@ -72,7 +72,9 @@ class Router:
     """ Get basic and ssid info from all wireless bands and combine for updates. """
     self._connect()
     basic = self._data_request('wireless_basic')
+    self.logger.log_info('WIRELESS_BASIC', basic, rows=True, filter_by=[])
     ssid = self._data_request('wireless_ssid')
+    self.logger.log_info('WIRELESS_SSID', ssid, rows=True, filter_by=[])
 
     bands = {}
 
@@ -83,10 +85,6 @@ class Router:
       bands[band['band']].update(band)
 
     collect = list(bands.values())
-
-    #self.logger.log_info('WIRELESS', collect)
-    self.logger.log_info('WIRELESS', collect, rows=True, filter_by=['band', 'bandwidth', 'ssidName', 'enable'])
-
     return collect
 
   def _get_csrf(self):

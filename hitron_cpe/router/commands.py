@@ -15,9 +15,19 @@ def uptime(values, router, logger):
   sys_info = (router.get_sysinfo())[0]
   logger.log('UPTIME', f'WAN: {sys_info["systemWanUptime"]} LAN: {sys_info["systemLanUptime"]}')
 
+def ip(values, router, logger):
+  sys_info = (router.get_sysinfo())[0]
+  logger.log('IP', f'WAN (public) IP: {sys_info["wanIp"]}')
+
+def wireless(value, router, logger):
+  wireless = router.get_wireless()
+  logger.log('WIRELESS', wireless, rows=True, filter_by=['band', 'bandwidth', 'ssidName', 'enable'])
+
 command_list = {
   'probe': probe,
-  'uptime': uptime
+  'uptime': uptime,
+  'ip': ip,
+  'wireless': wireless
 }
 
 def dispatch(value):
