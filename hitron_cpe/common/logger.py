@@ -6,7 +6,7 @@ def _rpad(value, width):
   if len(value) > width:
     value = value[:width]
 
-  pad = len(value) - width
+  pad = width - len(value)
 
   if pad > 0:
     for i in range(0, pad):

@@ -24,5 +24,8 @@ def run():
   logger = Logger(value['verbose'])
   router = Router(address, user, value['password'], logger)
 
+# dispatch commands, using stored session state if available
+
   router.get_sysinfo()
   router.get_wireless()
+  router.toggle_wireless('berkeley')

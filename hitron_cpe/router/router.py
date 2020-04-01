@@ -87,10 +87,18 @@ class Router:
 
   def _get_csrf(self):
     """ The CSRF token is only needed on updates. """
-    # GET http://192.168.0.1/data/getCsrfToken.asp
-    print('not implemented')
+    if self.csrf is None:
+      csrf = self._data_request('getCsrfToken')
+      self.logger.log('CSRF', csrf, filter_by=['token'])
+      self.csrf = csrf['token']
+      return self.csrf
+    else:
+      return self.csrf
+
 
   def toggle_wireless(self, ssid):
     """ Toggle the wireless band for ssid on or off. """
     # POST http://192.168.0.1/goform/WirelessCollection
-    print('not implemented')
+
+    csrf = self._get_csrf()
+    print(f'using csrf: {csrf}')
