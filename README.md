@@ -1,42 +1,42 @@
-# Cryptography: Keeping Secrets
+# Hitron Cable CPE Tool
 
-A set of tools for learning classical and modern cryptography and cryptographic analysis techniques. This project is organized as a teaching tool with implementations interspersed with descriptions. It is not a replacement for more comprehensive texts on the subject, but provides a hands-on approach for those looking for examples and interaction.
+A command-line tool for communicating with Hitron Cable Consumer Provided Equipment (ie. Residential Modem/Router).
 
-*This is an initial draft in progress.*
+This tool utilizes the API provided by the device's web interface to allow scripting. In particular, I use it to turn my
+WiFi on and off with a schedule.
 
-## Getting Started
+I've only used this with the CGNVM-3582 model, but it may work with others, *YMMV*.
 
-The best place to start is with the [tutorial](tutorial/classical.md). This covers the basic concepts of Classical Cryptopgraphy with examples of how to use the tools.
+## Prerequisites
 
-### Prerequisites
+* Python 3+
+* Requests module
+  - `pip install requests`
 
-You need Python version 3+ to run the tools. There are no external dependencies.
 
-### Running
+## Running
 
-You can run the `crypto` module directly or through a script wrapper. To run it directly:
-
-```
-python -m crypto
-```
-Through the wrapper:
+All commands can be executed through the script wrapper, `hitron`. For example, to see if your device responds with the defaults, send a probe:
 
 ```
-./crypto
+./hitron probe
 ```
 
-Running without arguments will give you the help for the command-line options.
+If your device address is not the default (192.168.0.1) you can set it with the --address option:
 
-There is also a wrapper for the `freq` module.
+```
+./hitron probe --address=192.168.10.1
+```
 
-## License
+For a list of supported commands type:
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+```
+./hitron help
+```
 
-## Resources
+For details of a particular command, pass the help flag to the command:
 
-Here are some excellent books on the subject.
-* Introduction to Cryptography with Coding Theory, Wade Trappe, Lawrence C. Washington, 2006
-* Cryptography: An Introduction, Nigel Smart, 2004
-* etc
+```
+./hitron probe --help
+```
 
