@@ -25,10 +25,10 @@ def _set_defaults(value):
 
 def run():
   """ Execute the commands parsed from the command line. """
-  (err, value) = commando.parse('command [<address>|<user>|<password>|<toggle_ssid>] (verbose)', sys.argv[1:])
+  (err, value) = commando.parse('command [<address>|<user>|<password>|<toggle_ssid>] (verbose|help)', sys.argv[1:])
 
   if err:
-    print(value)
+    print('Invalid command, try: ./hitron help')
     return
 
   value = _set_defaults(value)

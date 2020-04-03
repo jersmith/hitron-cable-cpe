@@ -52,6 +52,17 @@ class Logger:
     if self.verbose:
       self.log(command, message, rows, filter_by)
 
+  def log_columns(self, text, widths):
+    message = ''
+    for idx, col in enumerate(text):
+      if idx < len(widths):
+        message += _rpad(col, widths[idx])
+      else:
+        message += col
+
+    print(message)
+
+
   def log_failure(self, raw_string):
     """ Log a failure message, formatted if in verbose-mode, skinny otherwise. """
     if self.verbose:
