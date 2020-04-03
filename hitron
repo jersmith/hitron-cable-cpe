@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+
+from hitron_cpe import app
+app.run()
+
