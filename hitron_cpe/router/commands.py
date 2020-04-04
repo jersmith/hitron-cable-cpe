@@ -39,7 +39,7 @@ def print_help(values, router, logger):
   print()
 
 def probe(values, router, logger):
-  if 'help' in values:
+  if values['help']:
     print()
     print('hitron probe [options]')
     logger.log_columns([' ', '--address', 'The IP address to reach your device. Defaults to 192.168.0.1.'],
@@ -51,7 +51,7 @@ def probe(values, router, logger):
   logger.log('PROBE', f'Success: Model {sys_model["modelName"]}')
 
 def uptime(values, router, logger):
-  if 'help' in values:
+  if values['help']:
     print()
     print('hitron uptime [options]')
     logger.log_columns([' ', '--address', 'The IP address to reach your device. Defaults to 192.168.0.1.'],
@@ -69,7 +69,7 @@ def uptime(values, router, logger):
   logger.log('UPTIME', f'WAN: {sys_info["systemWanUptime"]} LAN: {sys_info["systemLanUptime"]}')
 
 def ip(values, router, logger):
-  if 'help' in values:
+  if values['help']:
     print()
     print('hitron ip [options]')
     logger.log_columns([' ', '--address', 'The IP address to reach your device. Defaults to 192.168.0.1.'],
@@ -87,7 +87,7 @@ def ip(values, router, logger):
   logger.log('IP', f'WAN (public) IP: {sys_info["wanIp"]}')
 
 def wireless(values, router, logger):
-  if 'help' in values:
+  if values['help']:
     print()
     print('hitron wireless [options]')
     logger.log_columns([' ', '--address', 'The IP address to reach your device. Defaults to 192.168.0.1.'],
