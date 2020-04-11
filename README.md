@@ -40,3 +40,14 @@ For details of a particular command, pass the help flag to the command:
 ./hitron probe --help
 ```
 
+## Configure
+
+Certain options are almost always required:
+* password
+* address
+* user
+
+If you are not using the defaults for these (and you shouldn't for password), you can place
+values in a configuration file to be read instead of as command line options. You can point
+to this file with the `config` option, or place a file named `.hitronrc` in the current
+working directory.

@@ -24,16 +24,17 @@ class Logger:
     self.verbose = verbose
 
   def log(self, command, message, rows=False, filter_by=None):
+    """ Base log, always written with standard formatting """
     timestamp = datetime.datetime.now()
     timestring = timestamp.strftime('%a %d %b %r')
     if filter_by is None:
       print(f'{timestring}: [{command}] -- {message}')
     else:
       print(f'{timestring}: [{command}]')
-      if rows == True:
+      if rows:
         for row in message:
           if len(filter_by) > 0:
-            data = { your_key: row[your_key] for your_key in filter_by }
+            data = {your_key: row[your_key] for your_key in filter_by}
           else:
             data = row
 
@@ -41,7 +42,7 @@ class Logger:
           print('      --------------------')
       else:
         if len(filter_by) > 0:
-          data = { your_key: message[your_key] for your_key in filter_by }
+          data = {your_key: message[your_key] for your_key in filter_by}
         else:
           data = message
 

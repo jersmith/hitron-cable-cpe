@@ -1,9 +1,9 @@
 """ Represents the commands that can be sent to the Hitron router (cable CPE device). """
 
 import datetime
-import requests
 import sys
 import urllib.parse
+import requests
 
 class Router:
   """ The state and methods needed to communicate with the device. """
@@ -13,6 +13,7 @@ class Router:
     self.password = password
     self.address = address
     self.logger = logger
+    self.model = None
     self.session = None
     self.csrf = None
 
@@ -95,8 +96,8 @@ class Router:
       self.logger.log_info('CSRF', csrf, filter_by=['token'])
       self.csrf = csrf['token']
       return self.csrf
-    else:
-      return self.csrf
+
+    return self.csrf
 
 
   def update_wireless(self, model):
@@ -112,8 +113,8 @@ class Router:
 
     payload = urllib.parse.urlencode(data)
     url = f'http://{self.address}/goform/WirelessCollection'
-    r = self.session.post(url,
-                          headers={'X-HTTP-Method-Override': 'PUT',
-                                   'X-Requested-With': 'XMLHttpRequest'},
-                          data=payload,
-                          cookies={'isEdit': '0', 'isEdit1': '0', 'isEdit2': '0', 'isEdit3': '0'})
+    self.session.post(url,
+                      headers={'X-HTTP-Method-Override': 'PUT',
+                               'X-Requested-With': 'XMLHttpRequest'},
+                      data=payload,
+                      cookies={'isEdit': '0', 'isEdit1': '0', 'isEdit2': '0', 'isEdit3': '0'})

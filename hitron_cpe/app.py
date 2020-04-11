@@ -23,13 +23,40 @@ def _set_defaults(value):
 
   return value
 
+def _load_config(value):
+  if 'config' in value:
+    config_file = value['config']
+  else:
+    config_file = '.hitronrc'
+
+  try:
+    with open(config_file) as config_file:
+      lines = config_file.readlines()
+      for line in lines:
+        pair = line.split('=')
+
+        if pair[0] in value:
+          kval = pair[1].strip()
+          if kval[0] == "'" or kval[0] == '"':
+            kval = kval[1:-1]
+
+          value[pair[0]] = kval
+
+  except OSError:
+    print(f'[+] {config_file} not found, using defaults')
+
+  return value
+
 def run():
   """ Execute the commands parsed from the command line. """
-  (err, value) = commando.parse('command [<address>|<user>|<password>|<toggle_ssid>] (verbose|help)', sys.argv[1:])
+  (err, value) = commando.parse(
+    'command [<address>|<user>|<password>|<toggle_ssid>|<config>] (verbose|help)',
+    sys.argv[1:])
 
   if err:
     print('Invalid command, try: ./hitron help')
     return
 
   value = _set_defaults(value)
+  value = _load_config(value)
   commands.dispatch(value)
